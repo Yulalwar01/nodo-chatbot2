@@ -1,0 +1,43 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NODO Chatbot</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    #chatbox { border: 1px solid #ccc; padding: 10px; height: 400px; overflow-y: auto; margin-bottom: 10px; }
+    #input { width: 80%; padding: 10px; }
+    #send { padding: 10px; }
+  </style>
+</head>
+<body>
+  <h2>Chat met NODO Support 🤖</h2>
+  <div id="chatbox"></div>
+  <input id="input" type="text" placeholder="Typ hier je vraag..." />
+  <button id="send">Verstuur</button>
+
+  <script>
+    const input = document.getElementById("input");
+    const send = document.getElementById("send");
+    const chatbox = document.getElementById("chatbox");
+
+    send.onclick = async () => {
+      const userInput = input.value;
+      if (!userInput) return;
+      chatbox.innerHTML += `<div><strong>Jij:</strong> ${userInput}</div>`;
+      input.value = "";
+
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: userInput })
+      });
+      const data = await response.json();
+      chatbox.innerHTML += `<div><strong>NODO:</strong> ${data.reply}</div>`;
+      chatbox.scrollTop = chatbox.scrollHeight;
+    };
+  </script>
+</body>
+</html>
